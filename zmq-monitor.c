@@ -68,6 +68,7 @@ void * newsock(void * context){
 int main(){
   FILE * kbd = fopen(KEYBOARD, "r");
   if(!kbd){
+    printf("Error: No permissions to open %s\n", KEYBOARD);
     return 1;
   }
   
@@ -90,7 +91,7 @@ int main(){
           // Otherwise just send signal
           rc = sendmessage("Parsed_volume_8 volume 1", socket);
           if(rc == 11){
-            zmq_close (socket);
+            zmq_close(socket);
             socket = newsock(context);
           }
           else if(rc) {
@@ -108,7 +109,7 @@ int main(){
     if(ptt_wait && --ptt_wait <= 0){
       rc = sendmessage("Parsed_volume_8 volume 0", socket);
       if(rc == 11){
-        zmq_close (socket);
+        zmq_close(socket);
         socket = newsock(context);
       }
       else if(rc) {

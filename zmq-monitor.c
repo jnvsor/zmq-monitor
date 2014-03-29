@@ -8,11 +8,7 @@
 
 typedef struct { char map[KEY_MAX/8+1]; } keymap;
 
-static inline int getptt    (keymap state);
 static inline int ispressed (keymap state, int key );
-keymap  getstate    (FILE * kbd );
-int     sendmessage (char * value, void * socket);
-void *  newsock     ();
 
 /* #defines, and getptt() can be edited for config purposes. The filter ID
  * can be changed below in main() at the sendmessage() calls */

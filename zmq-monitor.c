@@ -60,6 +60,11 @@ keymap getstate(FILE * kbd){
 }
 
 int sendmessage(char * message, void * socket){
+  if(message[0] == '\0'){
+    printf("Sent no message\n");
+    return 0;
+  }
+  
   if(zmq_send(socket, message, strlen(message), 0) == -1){
     goto error;
   }

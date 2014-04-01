@@ -2,7 +2,7 @@ CFLAGS=-O3
 LIBS=-lzmq
 CC=gcc
 
-zmq-monitor: zmq-monitor.c
+zmq-monitor: zmq-monitor.c zmq-monitor.h
 	$(CC) -o $@ $< $(CFLAGS) $(LIBS)
 
 clean:

@@ -12,7 +12,6 @@ static inline int ispressed (keymap state, int key );
 
 /* #defines, and getptt() can be edited for config purposes. The filter ID
  * can be changed below in main() at the sendmessage() calls */
-#define KEYBOARD "/dev/input/by-id/usb-04d9_daskeyboard-event-kbd"
 #define KEYUP_DELAY 30
 #define POLL_DELAY 0.01
 
@@ -61,10 +60,17 @@ void * newsock(void * context){
   return socket;
 }
 
-int main(){
-  FILE * kbd = fopen(KEYBOARD, "r");
+int main(int argc, char * argv[]){
+  if(argc != 4){
+    printf("Error: Expected 3 arguments, got %d\n", argc-1);
+    return 1;
+  }
+  
+  char * keyboard = argv[1], * keydown = argv[2], * keyup = argv[3];
+  
+  FILE * kbd = fopen(keyboard, "r");
   if(!kbd){
-    printf("Error: No permissions to open %s\n", KEYBOARD);
+    printf("Error: No permissions to open %s\n", keyboard);
     return 1;
   }
   
@@ -85,7 +91,7 @@ int main(){
         }
         else {
           // Otherwise just send signal
-          rc = sendmessage("Parsed_volume_8 volume 1", socket);
+          rc = sendmessage(keydown, socket);
           if(rc == 11){
             zmq_close(socket);
             socket = newsock(context);
@@ -103,7 +109,7 @@ int main(){
     
     // Decrement wait to 0 then send the signal
     if(ptt_wait && --ptt_wait <= 0){
-      rc = sendmessage("Parsed_volume_8 volume 0", socket);
+      rc = sendmessage(keyup, socket);
       if(rc == 11){
         zmq_close(socket);
         socket = newsock(context);
